@@ -16,7 +16,7 @@ def videos():
                 part="snippet",
                 body={
                     "snippet": {
-                        "playlistId": "PLq8ip1SLHsDKsHDLT0LfWFnPpXJsf8PN4",
+                        "playlistId": "YOUR-ID-HERE",
                         "position": 0,
                         "resourceId": {
                             "kind": "youtube#video",
