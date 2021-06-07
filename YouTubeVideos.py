@@ -1,28 +1,41 @@
 
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 from YouTubeAuth import authorize
 
-# -------------------- Insert videos -----------
+# This program inserts the actual youtube videos into the desired playlist
 
 creds = authorize()
+allTracks = ['House', 'electronicmusic', 'Techno',
+                     'listentothis', 'trap', 'indieheads', 'hiphopheads']
 
 def videos():
     youtube = build('youtube', 'v3', credentials=creds)
-    with open("House.txt", "r") as tracks:
-        for line in tracks:
-            videoID = line
-            request = youtube.playlistItems().insert(
+    # read the video Ids and set up the request
+    for item in allTracks:
+        with open(item + ".txt", "r") as tracks:
+            line = tracks.readline()
+            while line:
+                videoID = line.strip()
+                request = youtube.playlistItems().insert(
                 part="snippet",
                 body={
-                    "snippet": {
-                        "playlistId": "PLq8ip1SLHsDKsHDLT0LfWFnPpXJsf8PN4",
-                        "position": 0,
-                        "resourceId": {
-                            "kind": "youtube#video",
-                            "videoId": videoID
-                        }
+                "snippet": {
+                    "playlistId": "INSERT-PLAYLIST-ID-HERE",
+                    "position": 0,
+                    "resourceId": {
+                    "kind": "youtube#video",
+                    "videoId": str(videoID)
                     }
                 }
-            )
-        response = request.execute()
+                }
+                )
+                try:
+                    response = request.execute()
+                except HttpError as error:
+                    print("No video added")
+                line = tracks.readline()
+        tracks.close()
+
+
